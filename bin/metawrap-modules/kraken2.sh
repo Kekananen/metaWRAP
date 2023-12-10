@@ -107,9 +107,25 @@ fi
 # If there are several pairs of reads passed, they are processed sepperately
 for num in "$@"; do
 	#process fastq files
-	if [[ $num == *"_1.fastq" ]]; then
-		reads_1=$num
-		reads_2=${num%_*}_2.fastq
+	if [[ $num == @(*"_1.fastq"|*"_1.fastq.gz"|*"_R1.fastq.gz"|*"_R1.fastq") ]]; then
+ 		if [[ $num == "_1.fastq.gz" ]]; then
+			$opt = "--gzip-compressed"
+   			reads_1=$num
+   			reads_2=${num%_*}_2.fastq.gz
+      		fi
+		if [[ $num == "_R1.fastq.gz" ]]; then
+			$opt = "--gzip-compressed"
+   			reads_1=$num
+   			reads_2=${num%_*}_R2.fastq.gz
+      		fi
+		if [[ $num == "_1.fastq" ]]; then
+			reads_1=$num
+			reads_2=${num%_*}_2.fastq
+  		fi
+		if [[ $num == "_R1.fastq" ]]; then
+			reads_1=$num
+			reads_2=${num%_*}_R2.fastq
+  		fi
 		if [ "$reads_2" = "false" ]; then error "$reads_2 does not exist. Exiting..."; fi
 		
 		tmp=${reads_1##*/}
@@ -132,9 +148,9 @@ for num in "$@"; do
 		if [ ! -s $reads_1 ]; then error "$reads_1 doesnt exist. Exiting..."; fi
 
 		if [ "$preload" = true ]; then
-			CMD="kraken2 --use-names --db ${KRAKEN2_DB} --paired --threads $threads --output ${out}/${sample}.krak2 $reads_1 $reads_2"
+			CMD="kraken2 --use-names --db ${KRAKEN2_DB} --paired --threads $threads $opts --output ${out}/${sample}.krak2 $reads_1 $reads_2"
 		else
-			CMD="kraken2 --use-names --db ${KRAKEN2_DB} --paired --threads $threads --output ${out}/${sample}.krak2 --memory-mapping $reads_1 $reads_2"
+			CMD="kraken2 --use-names --db ${KRAKEN2_DB} --paired --threads $threads $opts --output ${out}/${sample}.krak2 --memory-mapping $reads_1 $reads_2"
 		fi
 		
 		if [ -s ${out}/${sample}.krak2 ]; then
