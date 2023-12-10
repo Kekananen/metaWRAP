@@ -136,21 +136,21 @@ if [ $read_type = paired ]; then
 	# check for at least one pair of read fastq files:
 	F="no"; R="no"
 	for num in "$@"; do
-		if [[ $num == *"_1.fastq" ]]; then F="yes"; fi
-		if [[ $num == *"_2.fastq" ]]; then R="yes"; fi
+		if [[ $num == @("_1.fastq"|*"_1.fastq.gz"|*"_R1.fastq.gz"|*"_R1.fastq") ]]; then F="yes"; fi
+		if [[ $num == @("_2.fastq"|*"_2.fastq.gz"|*"_R2.fastq.gz"|*"_R2.fastq") ]]; then R="yes"; fi
 	done
 	if [ $F = "no" ] || [ $R = "no" ]; then
-		comm "Unable to find proper fastq read pair in the format *_1.fastq and *_2.fastq"
+		comm "Unable to find proper fastq read pair. Please check if reads follow the format R1_fastq.gz, R1_fastq, 1_fastq, or 1_fastq.gz"
 		help_message; exit 1
 	fi
 else
 	# check for at least one fastq read
 	F="no"
 	for num in "$@"; do
-		if [[ $num == *".fastq" ]]; then F="yes"; fi
+		if [[ $num == @(*".fastq"|*".fastq.gz") ]]; then F="yes"; fi
 	done
 	if [ $F = "no" ]; then
-		comm "Unable to find read files in format *.fastq (for single-end or interleaved reads)"
+		comm "Unable to find read files in format *.fastq or *fastq.gz (for single-end or interleaved reads)"
 		help_message; exit 1
 	fi
 fi
