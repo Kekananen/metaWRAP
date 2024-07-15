@@ -136,7 +136,7 @@ if [ $read_type = paired ]; then
 	# check for at least one pair of read fastq files:
 	F="no"; R="no"
 	for num in "$@"; do
-		if [[ $num == @("_1.fastq"|*"_1.fastq.gz"|*"_R1.fastq.gz"|*"_R1.fastq|"*"_R1.fq"|"*"_R1.fq.gz") ]]; then F="yes"; fi
+		if [[ $num == @("_1.fastq"|*"_1.fastq.gz"|*"_R1.fastq.gz"|*"_R1.fastq"|"*"_R1.fq"|"*"_R1.fq.gz") ]]; then F="yes"; fi
 		if [[ $num == @("_2.fastq"|*"_2.fastq.gz"|*"_R2.fastq.gz"|*"_R2.fastq"|"*"_R2.fq"|"*"_R2.fq.gz") ]]; then R="yes"; fi
 	done
 	if [ $F = "no" ] || [ $R = "no" ]; then
